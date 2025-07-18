@@ -162,7 +162,7 @@ JavaScript에서는 Map과 일반 객체(Object)가 모두 키-값 쌍을 저�
 
 ### 3. chatGPT GPTs 중  `Communication Coach` 을 활용하여 피드백을 진행합니다.
 
-![image.png](attachment:0ba38092-ffea-46e5-bb2f-cb036266eebf:image.png)
+<img width="523" height="879" alt="coach" src="https://github.com/user-attachments/assets/92fb3d4a-dd5c-42f7-a4f7-5042b7488428" />
 
 ### 4. 피드백 내용을 적용하여 피어 피드백을 진행해봅니다.
 
