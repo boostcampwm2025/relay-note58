@@ -62,9 +62,11 @@ let b = (10, 2);
 정보를 담고 있는 영상의 경우 [릴리스AI](https://lilys.ai/)를 활용해 요약할 수 있다
 
 ### 예시
-영상 링크: [AI시대에 알맞은 3D 모델링 방법이 등장했다 | Meshy AI](https://www.youtube.com/watch?v=--7vaX_-0EQ)
+영상 링크: 
+[AI시대에 알맞은 3D 모델링 방법이 등장했다 | Meshy AI](https://www.youtube.com/watch?v=--7vaX_-0EQ)
 
 요약 결과: 
+<img width="686" height="414" alt="영상 요약" src="https://github.com/user-attachments/assets/139344ea-4c07-4c09-8727-0f10f19f39bd" />
 
 
 
