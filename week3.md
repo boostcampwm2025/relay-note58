@@ -348,6 +348,8 @@ AI가 만든 추리 게임 진행하기, 슬랙에서 스레드로 이어서 진
 
 피어 컴파일링때 팀원분들 READMD의 흐름을 잘 이해하지 못할 때가 있는데 AI로 요약을 시킴으로써 흐름을 파악하기도 쉽고, 피곤한 아침 시간대에 많이 도움 된 것 같습니다!
 
+---
+
 ### J118
 
 ### 퀘스트 선택
@@ -371,6 +373,8 @@ AI가 만든 추리 게임 진행하기, 슬랙에서 스레드로 이어서 진
 아쉬운점
 
 - 리드미에는 설계, 흐름 등을 그림으로 설명하는 경우가 많다. 지피티에 입력되지 않은 그림들이 빠져서 맥락파악에 포함되지 않는다는 점이 아쉬웠다.
+
+---
   
 ### J285
 
@@ -381,6 +385,269 @@ AI가 만든 추리 게임 진행하기, 슬랙에서 스레드로 이어서 진
 ### 선택 이유
 
 재미 위주의 퀘스트를 원했고, JS에 대해 생각해보지 못한 점들을 알 수 있을 것 같아서 선택했습니다.
+
+### 미션 수행
+
+#### 프롬프트 
+`이러한 쇼핑 서비스 미션과 관련하여,
+jsisweird.com
+https://github.com/denysdovhan/wtfjs
+위 사이트를 참고하여 JS의 신기한, 이상한 퀴즈를 만들어줘`
+
+<details>
+<summary>AI 답변</summary>
+<div markdown="1">
+
+네, 쇼핑 서비스 과제에 영감을 받아, `wtfjs`와 `jsisweird.com`의 재미있는 사례들을 바탕으로 자바스크립트 퀴즈를 만들어 보았습니다.
+
+-----
+
+## 🛒 쇼핑몰 백엔드 개발자를 위한 JS 함정 퀴즈
+
+쇼핑 서비스 과제를 진행하시면서 겪을 수 있는 자바스크립트의 신기하고 이상한 함정 퀴즈입니다. 과연 몇 개나 맞추실 수 있을까요?
+
+### 퀴즈 \#1: 텅 빈 장바구니의 덧셈
+
+쇼핑몰에서 비어있는 두 장바구니(배열)를 합치거나, 비어있는 고객 정보(객체)와 장바구니를 합치면 어떤 일이 일어날까요?
+
+**문제**
+
+```javascript
+// 1. 빈 장바구니 + 빈 장바구니
+console.log([] + []);
+
+// 2. 빈 고객 정보 + 빈 장바구니
+console.log({} + []);
+```
+
+위 두 `console.log`의 결과는 각각 무엇일까요?
+
+**정답 및 해설**
+
+```javascript
+// 1. 결과: "" (빈 문자열)
+// 2. 결과: 0 (숫자 0) 또는 [object Object] (브라우저 환경에 따라 다름)
+```
+
+**이유는 이렇습니다:**
+
+1.  **`[] + []`**: `+` 연산자는 한쪽이라도 객체나 배열이면, 다른 쪽을 원시값으로 변환하려는 시도를 합니다. 배열의 기본 원시값은 `toString()` 메서드를 통해 얻는데, 빈 배열 `[]`의 `toString()` 결과는 빈 문자열 `""`입니다. 따라서 `"" + ""`와 같은 연산이 되어 결과는 `""`가 됩니다.
+
+2.  **`{} + []`**: 이 경우는 조금 더 복잡합니다.
+
+      * **Node.js 환경:** `{}`가 빈 코드 블록으로 해석되어 무시되고, `+[]` 연산만 남게 됩니다. `+`를 숫자 변환 연산자로 본 자바스크립트는 `[]`를 숫자로 바꾸려고 시도하고, 그 결과 `0`이 됩니다.
+      * **브라우저 콘솔 환경:** `{}`가 객체 리터럴로 인식됩니다. `[object Object]`라는 문자열로 변환된 후, `[]`가 변환된 `""`와 더해져 `"[object Object]"`라는 문자열이 됩니다.
+
+**쇼핑몰 적용 팁**: 서로 다른 타입의 데이터를 `+` 연산자로 합치는 것은 예측 불가능한 결과를 낳을 수 있습니다. 항상 데이터의 타입을 명확히 하거나, 명시적으로 `String()` 또는 `Number()`로 변환 후 연산하는 것이 안전합니다.
+
+-----
+
+### 퀴즈 \#2: 정확한 가격 계산?
+
+고객이 100원짜리 상품과 200원짜리 상품을 구매했습니다. 총액에 10%의 부가세를 더하려고 합니다.
+
+**문제**
+
+```javascript
+const priceA = 0.1; // 100원을 1000원으로 나눈 값
+const priceB = 0.2; // 200원을 1000원으로 나눈 값
+
+console.log(priceA + priceB === 0.3);
+```
+
+위 `console.log`의 결과는 `true`일까요, `false`일까요?
+
+**정답 및 해설**
+
+```javascript
+// 결과: false
+```
+
+**이유는 이렇습니다:**
+
+자바스크립트를 포함한 대부분의 프로그래밍 언어는 부동소수점 숫자를 처리할 때 **IEEE 754 표준**을 따릅니다. 이 표준은 2진법을 기반으로 하기 때문에, 0.1이나 0.2 같은 일부 십진수 소수를 정확하게 표현하지 못하고 아주 미세한 오차가 있는 근사치로 저장합니다.
+
+실제로 `0.1 + 0.2`를 계산하면 `0.30000000000000004`와 같은 결과가 나오므로, `0.3`과 비교하면 `false`가 됩니다.
+
+**쇼핑몰 적용 팁**: **절대 돈(가격) 계산에 부동소수점을 직접 사용하면 안 됩니다.** 모든 가격을 가장 작은 단위의 정수(예: '원' 대신 '전')로 저장하고 계산한 뒤, 사용자에게 보여줄 때만 소수점으로 변환하는 것이 가장 안전하고 표준적인 방법입니다.
+
+-----
+
+### 퀴즈 \#3: 상품 정렬의 함정
+
+MD가 상품 목록을 재고 수량 순으로 정렬하려고 합니다.
+
+**문제**
+
+```javascript
+const inventory = [
+  { name: '상품A', stock: 100 },
+  { name: '상품B', stock: 20 },
+  { name: '상품C', stock: 9 }
+];
+
+// 재고(stock) 기준으로 정렬
+const sorted = inventory.map(item => item.stock).sort();
+
+console.log(sorted);
+```
+
+위 `console.log`의 결과는 어떻게 나올까요?
+
+**정답 및 해설**
+
+```javascript
+// 결과: [100, 20, 9]
+```
+
+**이유는 이렇습니다:**
+
+배열의 `sort()` 메서드는 기본적으로 모든 요소를 **문자열로 취급하여 사전 순서(lexicographical order)로 정렬**합니다. 따라서 숫자 `100`, `20`, `9`를 문자열 `"100"`, `"20"`, `"9"`로 보고 정렬합니다.
+
+문자열 정렬에서는 첫 번째 글자부터 비교하므로 `"1"`이 `"2"`나 `"9"`보다 앞에 오게 되어 위와 같은 결과가 나옵니다.
+
+**쇼핑몰 적용 팁**: 숫자를 제대로 정렬하려면 `sort()` 메서드에 \*\*비교 함수(compare function)\*\*를 반드시 전달해야 합니다.
+
+```javascript
+// 올바른 숫자 정렬
+const correctlySorted = inventory.map(item => item.stock).sort((a, b) => a - b);
+console.log(correctlySorted); // [9, 20, 100]
+```
+
+</div>
+</details>
+
+<details>
+<summary>AI 답변2</summary>
+<div markdown="1">
+
+JavaScript의 특이한 동작들을 쇼핑 서비스 맥락에서 재미있는 퀴즈로 만들어보겠습니다.
+
+```javascript
+// 🛍️ 쇼핑몰 JavaScript 퀴즈 🤔
+
+// 1️⃣ 재고 비교
+const stock1 = 0;
+const stock2 = false;
+const stock3 = "";
+const stock4 = [];
+
+console.log("Q1. 다음 중 true는 몇 개일까요?");
+console.log(stock1 == stock2);  // ?
+console.log(stock2 == stock3);  // ?
+console.log(stock3 == stock4);  // ?
+console.log(stock4 == stock1);  // ?
+
+// 2️⃣ 장바구니 합계
+console.log("Q2. 장바구니 합계는 얼마일까요?");
+console.log(["5"] + 3);        // ?
+console.log(["5"] - 3);        // ?
+console.log([5] + [3]);        // ?
+console.log([5, 3] + [1, 2]);  // ?
+
+// 3️⃣ 상품 ID 정렬
+console.log("Q3. 상품 ID 정렬 결과는?");
+console.log(['P2', 'P10', 'P1'].sort());  // ?
+
+// 4️⃣ 재고 계산
+console.log("Q4. 재고 계산 결과는?");
+console.log(0.1 + 0.2 === 0.3);  // ?
+console.log(999999999999999);     // ?
+console.log(9999999999999999);    // ?
+
+// 5️⃣ 장바구니 아이템 체크
+const cart = {
+  items: ["apple"]
+};
+
+console.log("Q5. 장바구니 검사 결과는?");
+console.log(cart.items?.[0]?.[0]?.toLowerCase());  // ?
+console.log(cart.items?.[0]?.[0]?.toUpperCase?.());  // ?
+console.log(cart.items?.[1]?.[0]?.toUpperCase?.());  // ?
+
+// 6️⃣ 상품 가격 비교
+console.log("Q6. 가격 비교 결과는?");
+console.log(NaN === NaN);  // ?
+console.log(Object.is(NaN, NaN));  // ?
+console.log(Math.max());  // ?
+console.log(Math.min());  // ?
+
+// 7️⃣ 상품 ID 생성
+console.log("Q7. 생성된 ID는?");
+console.log(['P', 1] + ['S', 2]);  // ?
+console.log({} + []);  // ?
+console.log([] + {});  // ?
+```
+
+**정답과 설명:**
+
+1️⃣ 재고 비교
+```javascript
+console.log(stock1 == stock2);  // true (0 == false)
+console.log(stock2 == stock3);  // true (false == "")
+console.log(stock3 == stock4);  // true ("" == [])
+console.log(stock4 == stock1);  // true ([] == 0)
+```
+설명: JavaScript의 느슨한 동등 비교(==)는 타입 강제 변환을 수행합니다. 빈 배열은 0으로, 빈 문자열은 false로 변환됩니다.
+
+2️⃣ 장바구니 합계
+```javascript
+console.log(["5"] + 3);        // "53" (문자열 연결)
+console.log(["5"] - 3);        // 2 (숫자 뺄셈)
+console.log([5] + [3]);        // "53" (배열->문자열 변환 후 연결)
+console.log([5, 3] + [1, 2]);  // "5,31,2" (배열->문자열 변환 후 연결)
+```
+설명: + 연산자는 문자열 연결을 우선하지만, - 연산자는 숫자 연산만 수행합니다.
+
+3️⃣ 상품 ID 정렬
+```javascript
+console.log(['P2', 'P10', 'P1'].sort());  // ['P1', 'P10', 'P2']
+```
+설명: 기본 sort()는 문자열 기준으로 정렬하므로 'P10'이 'P2'보다 앞에 옵니다.
+
+4️⃣ 재고 계산
+```javascript
+console.log(0.1 + 0.2 === 0.3);  // false (부동소수점 오차)
+console.log(999999999999999);     // 999999999999999
+console.log(9999999999999999);    // 10000000000000000
+```
+설명: JavaScript는 IEEE 754 부동소수점을 사용하며, 특정 숫자는 정확히 표현할 수 없습니다.
+
+5️⃣ 장바구니 아이템 체크
+```javascript
+console.log(cart.items?.[0]?.[0]?.toLowerCase());  // "a"
+console.log(cart.items?.[0]?.[0]?.toUpperCase?.());  // "A"
+console.log(cart.items?.[1]?.[0]?.toUpperCase?.());  // undefined
+```
+설명: 옵셔널 체이닝(?.)을 사용하면 중간에 null/undefined가 있어도 안전하게 접근할 수 있습니다.
+
+6️⃣ 상품 가격 비교
+```javascript
+console.log(NaN === NaN);  // false
+console.log(Object.is(NaN, NaN));  // true
+console.log(Math.max());  // -Infinity
+console.log(Math.min());  // Infinity
+```
+설명: NaN은 자신과도 같지 않으며, 인자가 없을 때 Math.max와 Math.min은 의외의 결과를 반환합니다.
+
+7️⃣ 상품 ID 생성
+```javascript
+console.log(['P', 1] + ['S', 2]);  // "P1S2"
+console.log({} + []);  // "[object Object]"
+console.log([] + {});  // "[object Object]"
+```
+설명: 배열과 객체의 + 연산은 toString() 메서드를 호출한 후 문자열을 연결합니다.
+
+이러한 특이한 동작들은 실제 코딩에서 버그의 원인이 될 수 있으므로, 엄격한 비교(===)를 사용하고 명시적인 타입 변환을 하는 것이 좋습니다.
+
+</div>
+</details>
+
+### 느낀 점
+JS는 특이한 언어라서 이러한 퀴즈를 많이 만들 수는 있는데, 미션과 연관된 퀴즈로 범위를 제한하니까 최대한 미션과 엮어보려는 AI의 노력을 엿볼 수 있었다.
+퀴즈를 모두 맞히지는 못했지만, 풀이를 보며 JS 문법에 대해 넓은 잔지식들을 학습하는 데에는 도움이 되었다고 생각한다.
+
+---
 
 ### J094
 
